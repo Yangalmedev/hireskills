@@ -12,22 +12,22 @@ Full detail: PRODUCT-SPEC.md.
 
 ## 2. Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Backend | Laravel 13, PHP 8.3+ |
-| Frontend | Inertia.js v3 + React 19 + TypeScript |
-| Root template | Blade — one shell (`app.blade.php`) only, never individual pages |
-| Styling | Tailwind CSS v4, shadcn-style components (ships with the starter kit) |
-| Auth | Laravel Fortify (session-based, never JWT) — extend `App\Actions\Fortify\CreateNewUser`, don't rewrite registration from scratch |
-| Routing | Laravel Wayfinder — typed route/controller references on the React side |
-| ORM | Eloquent |
-| Database | SQLite locally (already set up and migrated) — MySQL or PostgreSQL only if/when deploying, decided later |
-| Passwords | Laravel's `Hash` facade (bcrypt) |
-| Email | Laravel Mail via a free SMTP provider |
-| File storage | Laravel `Storage` facade, local disk driver |
-| Testing | Pest (unit, feature, browser/E2E) |
-| Local dev | Laravel Herd + `composer run dev` |
-| AI tooling | Laravel Boost — already configured for Cursor, provides stack-level guidelines/skills that complement (not replace) this file |
+| Layer         | Choice                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Backend       | Laravel 13, PHP 8.3+                                                                                                             |
+| Frontend      | Inertia.js v3 + React 19 + TypeScript                                                                                            |
+| Root template | Blade — one shell (`app.blade.php`) only, never individual pages                                                                 |
+| Styling       | Tailwind CSS v4, shadcn-style components (ships with the starter kit)                                                            |
+| Auth          | Laravel Fortify (session-based, never JWT) — extend `App\Actions\Fortify\CreateNewUser`, don't rewrite registration from scratch |
+| Routing       | Laravel Wayfinder — typed route/controller references on the React side                                                          |
+| ORM           | Eloquent                                                                                                                         |
+| Database      | SQLite locally (already set up and migrated) — MySQL or PostgreSQL only if/when deploying, decided later                         |
+| Passwords     | Laravel's `Hash` facade (bcrypt)                                                                                                 |
+| Email         | Laravel Mail via a free SMTP provider                                                                                            |
+| File storage  | Laravel `Storage` facade, local disk driver                                                                                      |
+| Testing       | Pest (unit, feature, browser/E2E)                                                                                                |
+| Local dev     | Laravel Herd + `composer run dev`                                                                                                |
+| AI tooling    | Laravel Boost — already configured for Cursor, provides stack-level guidelines/skills that complement (not replace) this file    |
 
 Constraint behind every choice: instructor requires latest Laravel; solo/AI-assisted development, no paid services or software, web-only, mobile-first, English-only. Full detail: TECHNICAL-SPEC.md Section 1.
 
