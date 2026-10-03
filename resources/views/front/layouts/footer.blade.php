@@ -1,12 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  <footer>All Rights Reserved 2026</footer>
-</body>
-</html>
+<style>
+    .site-footer{background:var(--g);color:#eaffea;padding:28px 56px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:15px}
+    .site-footer a{color:#fff;margin-left:16px;text-decoration:none}
+    .site-footer a:hover{text-decoration:underline}
+    @media(max-width:800px){.site-footer{padding:22px 20px}}
+</style>
+
+<footer class="site-footer">
+    <div>&copy; {{ date('Y') }} HireSkills. Find skilled local talent, right around you.</div>
+    <div>
+        <a href="{{ route('home') }}">Home</a>
+        <a href="{{ route('about') }}">About Us</a>
+        <a href="{{ route('login') }}">Log In</a>
+        <a href="{{ route('register') }}">Sign Up</a>
+    </div>
+</footer>
