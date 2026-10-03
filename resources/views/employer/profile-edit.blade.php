@@ -25,7 +25,12 @@
         @error('bio')<div class="err">{{ $message }}</div>@enderror
 
         <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone" value="{{ old('phone', $profile->phone) }}">
+        <input type="tel" id="phone" name="phone" value="{{ old('phone', $profile->phone) }}"
+               inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" placeholder="09171234567"
+               title="11-digit mobile number starting with 09 (example: 09171234567)"
+               oninput="this.value = this.value.replace(/\D/g, '').slice(0, 11)">
+        @error('phone')<div class="err">{{ $message }}</div>@enderror
+        <p class="muted" style="margin:6px 0 0">Mobile number only, 11 digits, numbers only.</p>
 
         <label for="address">Street / Purok / Sitio</label>
         <input type="text" id="address" name="address" value="{{ old('address', $profile->address) }}">

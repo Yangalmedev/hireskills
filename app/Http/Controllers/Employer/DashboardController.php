@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Employer;
 use App\Http\Controllers\Controller;
 use App\Models\FreelancerProfile;
 use App\Support\Abuyog;
+use App\Support\PhoneNumber;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -30,13 +31,18 @@ class DashboardController extends Controller
 
     public function update(Request $request)
     {
+        // tidy the phone number first (spaces/dashes, +63 -> 09)
+        $request->merge(['phone' => PhoneNumber::normalize($request->input('phone'))]);
+
         $data = $request->validate([
             'name'         => ['required', 'string', 'max:255'],
             'company_name' => ['nullable', 'string', 'max:255'],
             'bio'          => ['nullable', 'string', 'max:2000'],
-            'phone'        => ['nullable', 'string', 'max:30'],
+            'phone'       => ['nullable', 'regex:'.PhoneNumber::PATTERN],
             'address'      => ['nullable', 'string', 'max:255'],
             'barangay'     => ['nullable', Rule::in(Abuyog::all())],
+        ], [
+            'phone.regex' => PhoneNumber::MESSAGE,
         ]);
 
         $user = $request->user();
