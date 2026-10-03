@@ -6,11 +6,14 @@
 </style>
 
 <footer class="site-footer">
-    <div>&copy; {{ date('Y') }} HireSkills. Find skilled local talent, right around you.</div>
+    <div>&copy; {{ date('Y') }} HireSkills Abuyog · Connecting skilled workers and employers in the Municipality of Abuyog, Leyte.</div>
     <div>
         <a href="{{ route('home') }}">Home</a>
         <a href="{{ route('about') }}">About Us</a>
-        <a href="{{ route('login') }}">Log In</a>
-        <a href="{{ route('register') }}">Sign Up</a>
+        <a href="{{ route('freelancers.index') }}">Freelancers</a>
+        @guest
+            <a href="{{ route('login') }}">Log In</a>
+            <a href="{{ route('register') }}">Sign Up</a>
+        @endguest
     </div>
 </footer>

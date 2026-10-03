@@ -1,16 +1,19 @@
 <?php
 
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
-use App\Http\Controllers\Employer\FreelancerController as EmployerFreelancers;
 use App\Http\Controllers\Freelancer\DashboardController as FreelancerDashboard;
+use App\Http\Controllers\FreelancerController;
 use Illuminate\Support\Facades\Route;
 
 // ---- Public pages ----
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::view('/', 'front.home')->name('home');
+Route::view('/about', 'front.about')->name('about');
+
+// Browsing is public; the profile page itself checks login inside the controller
+Route::get('/freelancers', [FreelancerController::class, 'index'])->name('freelancers.index');
+Route::get('/freelancers/{freelancer}', [FreelancerController::class, 'show'])->name('freelancers.show');
 
 // ---- Guests only ----
 Route::middleware('guest')->group(function () {
@@ -35,8 +38,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [EmployerDashboard::class, 'index'])->name('dashboard');
         Route::get('/profile', [EmployerDashboard::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [EmployerDashboard::class, 'update'])->name('profile.update');
-        Route::get('/freelancers', [EmployerFreelancers::class, 'index'])->name('freelancers.index');
-        Route::get('/freelancers/{freelancer}', [EmployerFreelancers::class, 'show'])->name('freelancers.show');
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {

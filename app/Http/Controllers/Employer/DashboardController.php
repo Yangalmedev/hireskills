@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
 use App\Models\FreelancerProfile;
+use App\Support\Abuyog;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -34,7 +36,7 @@ class DashboardController extends Controller
             'bio'          => ['nullable', 'string', 'max:2000'],
             'phone'        => ['nullable', 'string', 'max:30'],
             'address'      => ['nullable', 'string', 'max:255'],
-            'city'         => ['nullable', 'string', 'max:120'],
+            'barangay'     => ['nullable', Rule::in(Abuyog::all())],
         ]);
 
         $user = $request->user();

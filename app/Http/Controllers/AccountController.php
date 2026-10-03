@@ -29,7 +29,6 @@ class AccountController extends Controller
 
         $user = User::create($data);
 
-        // create the matching empty profile
         $user->isFreelancer()
             ? FreelancerProfile::create(['user_id' => $user->id])
             : EmployerProfile::create(['user_id' => $user->id]);
@@ -37,7 +36,8 @@ class AccountController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect($user->dashboardRoute())->with('success', 'Welcome to HireSkills!');
+        // Back to the freelancer they were trying to view, else their dashboard
+        return redirect()->intended($user->dashboardRoute())->with('success', 'Welcome to HireSkills!');
     }
 
     public function showLogin()
@@ -70,7 +70,6 @@ class AccountController extends Controller
         return redirect()->route('home');
     }
 
-    /** /dashboard -> redirects to the correct role dashboard */
     public function dashboard()
     {
         return redirect(Auth::user()->dashboardRoute());

@@ -2,7 +2,7 @@
 @section('title', 'Edit Profile')
 @section('nav')
     <a href="{{ route('employer.dashboard') }}">Dashboard</a>
-    <a href="{{ route('employer.freelancers.index') }}">Browse Freelancers</a>
+    <a href="{{ route('freelancers.index') }}">Browse Freelancers</a>
     <a class="active" href="{{ route('employer.profile.edit') }}">Edit Profile</a>
     <a href="{{ route('home') }}">Home</a>
 @endsection
@@ -27,11 +27,22 @@
         <label for="phone">Phone</label>
         <input type="text" id="phone" name="phone" value="{{ old('phone', $profile->phone) }}">
 
-        <label for="address">Address</label>
+        <label for="address">Street / Purok / Sitio</label>
         <input type="text" id="address" name="address" value="{{ old('address', $profile->address) }}">
 
-        <label for="city">City</label>
-        <input type="text" id="city" name="city" value="{{ old('city', $profile->city) }}">
+        <label for="barangay">Barangay</label>
+        <select id="barangay" name="barangay">
+            <option value="">— Choose your barangay —</option>
+            @foreach(\App\Support\Abuyog::grouped() as $group => $list)
+                <optgroup label="{{ $group }}">
+                    @foreach($list as $b)
+                        <option value="{{ $b }}" @selected(old('barangay', $profile->barangay) === $b)>{{ $b }}</option>
+                    @endforeach
+                </optgroup>
+            @endforeach
+        </select>
+        @error('barangay')<div class="err">{{ $message }}</div>@enderror
+        <p class="muted" style="margin:6px 0 0">Municipality: Abuyog, Leyte</p>
 
         <div style="margin-top:22px;display:flex;gap:10px">
             <button class="btn" type="submit">Save changes</button>

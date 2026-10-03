@@ -1,23 +1,24 @@
 <style>
     .site-header{display:flex;align-items:center;justify-content:space-between;padding:18px 56px;gap:20px;flex-wrap:wrap}
     .site-logo{font-family:Montserrat,sans-serif;font-weight:700;letter-spacing:4px;font-size:32px;color:var(--g);text-decoration:none}
+    .site-brand{display:flex;flex-direction:column;line-height:1.1}
+    .site-place{color:#567;font-size:13px;letter-spacing:1px;margin-top:4px}
     .site-nav{display:flex;gap:40px;flex-wrap:wrap}
     .site-nav a{text-decoration:none;color:var(--g);font-weight:500;font-size:19px}
-    .site-nav a:hover{text-decoration:underline}
+    .site-nav a:hover,.site-nav a.on{text-decoration:underline}
     .site-actions{display:flex;gap:10px;align-items:center}
     .site-actions form{margin:0}
     @media(max-width:800px){.site-header{padding:16px 20px}.site-nav{gap:18px}.site-logo{font-size:24px}}
 </style>
 
 <header class="site-header">
-    <a class="site-logo" href="{{ route('home') }}">HIRESKILLS</a>
+    <div class="site-brand"><a class="site-logo" href="{{ route('home') }}">HIRESKILLS</a><span class="site-place">📍 Abuyog, Leyte</span></div>
 
     <nav class="site-nav">
-        <a href="{{ route('home') }}">Home</a>
-        <a href="{{ route('about') }}">About Us</a>
-        <a href="{{ route('home') }}#categories">Category</a>
-        <a href="{{ auth()->check() && auth()->user()->isEmployer() ? route('employer.freelancers.index') : route('register', ['role' => 'employer']) }}">Freelancers</a>
-        <a href="{{ route('about') }}#contact">Contact Us</a>
+        <a class="{{ request()->routeIs('home') ? 'on' : '' }}" href="{{ route('home') }}">Home</a>
+        <a class="{{ request()->routeIs('about') ? 'on' : '' }}" href="{{ route('about') }}">About Us</a>
+        <a href="{{ route('freelancers.index') }}#categories">Category</a>
+        <a class="{{ request()->routeIs('freelancers.*') ? 'on' : '' }}" href="{{ route('freelancers.index') }}">Freelancers</a>
     </nav>
 
     <div class="site-actions">

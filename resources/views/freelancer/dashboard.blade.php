@@ -3,11 +3,16 @@
 @section('nav')
     <a class="active" href="{{ route('freelancer.dashboard') }}">Dashboard</a>
     <a href="{{ route('freelancer.profile.edit') }}">Edit Profile</a>
+    <a href="{{ route('freelancers.index') }}">Browse Freelancers</a>
     <a href="{{ route('home') }}">Home</a>
 @endsection
 @section('content')
     <h1>Hi, {{ $user->name }} 👋</h1>
     <p class="sub">Manage your freelancer profile and get discovered by employers.</p>
+
+    @if(! $profile->title)
+        <div class="flash">Add a job title and category so employers can find you on the Freelancers page.</div>
+    @endif
 
     <div class="grid g2">
         <div class="card">
@@ -25,7 +30,8 @@
                     <span class="muted">{{ $profile->title ?: 'Add your job title' }}</span>
                 </div>
             </div>
-            <p class="muted">📍 {{ collect([$profile->address, $profile->city])->filter()->implode(', ') ?: 'No address yet' }}</p>
+            <p class="muted">🗂️ {{ $profile->category ?: 'No category yet' }}</p>
+            <p class="muted">📍 {{ $profile->full_location }}</p>
             <p class="muted">📞 {{ $profile->phone ?: 'No phone yet' }}</p>
             <p class="muted">💰 {{ $profile->hourly_rate ? '₱'.number_format($profile->hourly_rate, 2).' / hr' : 'No rate set' }}</p>
         </div>

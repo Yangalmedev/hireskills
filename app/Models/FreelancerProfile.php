@@ -2,12 +2,28 @@
 
 namespace App\Models;
 
+use App\Support\Abuyog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FreelancerProfile extends Model
 {
-    protected $fillable = ['user_id', 'title', 'bio', 'skills', 'hourly_rate', 'phone', 'address', 'city'];
+    /** Single source of truth for service categories. */
+    public const CATEGORIES = [
+        'Home and Repair',
+        'Technology',
+        'Design and Education',
+        'Events',
+        'Personal Services',
+        'Transportation',
+        'Construction',
+        'Agriculture and Fishing',
+    ];
+
+    protected $fillable = [
+        'user_id', 'title', 'category', 'bio', 'skills',
+        'hourly_rate', 'phone', 'address', 'barangay', 'city',
+    ];
 
     public function user(): BelongsTo
     {
@@ -17,5 +33,21 @@ class FreelancerProfile extends Model
     public function getSkillsListAttribute(): array
     {
         return array_values(array_filter(array_map('trim', explode(',', (string) $this->skills))));
+    }
+
+    /** "Maria Santos" -> "Maria S." (what guests see) */
+    public function getPublicNameAttribute(): string
+    {
+        $parts = preg_split('/\s+/', trim((string) $this->user?->name)) ?: [];
+        $first = $parts[0] ?? 'Freelancer';
+        $last = count($parts) > 1 ? ' '.mb_substr(end($parts), 0, 1).'.' : '';
+
+        return $first.$last;
+    }
+
+    /** "Purok 3, Brgy. Bito, Abuyog, Leyte" */
+    public function getFullLocationAttribute(): string
+    {
+        return Abuyog::location($this->address, $this->barangay);
     }
 }

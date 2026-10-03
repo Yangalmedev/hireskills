@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Freelancer;
 
 use App\Http\Controllers\Controller;
+use App\Models\FreelancerProfile;
+use App\Support\Abuyog;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DashboardController extends Controller
 {
@@ -12,7 +15,7 @@ class DashboardController extends Controller
         $user = $request->user();
         $profile = $user->freelancerProfile()->firstOrCreate([]);
 
-        $fields = ['title', 'bio', 'skills', 'hourly_rate', 'phone', 'address', 'city'];
+        $fields = ['title', 'category', 'bio', 'skills', 'hourly_rate', 'phone', 'address', 'barangay'];
         $filled = collect($fields)->filter(fn ($f) => filled($profile->$f))->count();
         $completeness = (int) round($filled / count($fields) * 100);
 
@@ -23,8 +26,9 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $profile = $user->freelancerProfile()->firstOrCreate([]);
+        $categories = FreelancerProfile::CATEGORIES;
 
-        return view('freelancer.profile-edit', compact('user', 'profile'));
+        return view('freelancer.profile-edit', compact('user', 'profile', 'categories'));
     }
 
     public function update(Request $request)
@@ -32,12 +36,13 @@ class DashboardController extends Controller
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'title'       => ['nullable', 'string', 'max:120'],
+            'category'    => ['nullable', Rule::in(FreelancerProfile::CATEGORIES)],
             'bio'         => ['nullable', 'string', 'max:2000'],
             'skills'      => ['nullable', 'string', 'max:500'],
             'hourly_rate' => ['nullable', 'numeric', 'min:0', 'max:99999'],
             'phone'       => ['nullable', 'string', 'max:30'],
             'address'     => ['nullable', 'string', 'max:255'],
-            'city'        => ['nullable', 'string', 'max:120'],
+            'barangay'    => ['nullable', Rule::in(Abuyog::all())],
         ]);
 
         $user = $request->user();
