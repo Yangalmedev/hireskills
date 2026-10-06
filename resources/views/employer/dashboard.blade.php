@@ -26,6 +26,12 @@
         </div>
     </div>
 
+    <div class="card" style="margin-top:18px">
+        <h3>Contact links</h3>
+        <p class="muted" style="margin:0 0 14px">Freelancers tap these to reach you on Messenger, Gmail or by phone.</p>
+        @include('freelancers._contact', ['profile' => $profile, 'mode' => 'owner'])
+    </div>
+
     <h2 style="color:var(--g);margin-top:30px">Newest freelancers</h2>
     <div class="fgrid">
         @forelse($latest as $f)

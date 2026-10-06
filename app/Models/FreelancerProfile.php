@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasContactLinks;
 use App\Support\Abuyog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FreelancerProfile extends Model
 {
+    use HasContactLinks;
+
     /** Single source of truth for service categories. */
     public const CATEGORIES = [
         'Home and Repair',
@@ -55,25 +58,5 @@ class FreelancerProfile extends Model
     public function getFullLocationAttribute(): string
     {
         return Abuyog::location($this->address, $this->barangay);
-    }
-
-    /** Opens the person's Messenger chat: https://m.me/username */
-    public function getMessengerUrlAttribute(): ?string
-    {
-        return filled($this->messenger) ? 'https://m.me/'.rawurlencode($this->messenger) : null;
-    }
-
-    /** Opens a new Gmail message addressed to the freelancer. */
-    public function getGmailUrlAttribute(): ?string
-    {
-        return filled($this->gmail)
-            ? 'https://mail.google.com/mail/?view=cm&fs=1&to='.rawurlencode($this->gmail)
-            : null;
-    }
-
-    /** Starts a phone call (tel: link). */
-    public function getPhoneUrlAttribute(): ?string
-    {
-        return filled($this->phone) ? 'tel:'.$this->phone : null;
     }
 }

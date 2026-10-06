@@ -1,7 +1,7 @@
 {{--
     Clickable contact links.
-    $profile : FreelancerProfile
-    $mode    : 'owner'  -> shows empty tiles that link to Edit Profile (freelancer dashboard)
+    $profile : FreelancerProfile or EmployerProfile
+    $mode    : 'owner'  -> shows empty tiles that link to Edit Profile (freelancer / employer dashboard)
                'public' -> shows only the channels that are linked (profile page for members)
 --}}
 @php
@@ -17,6 +17,10 @@
                         'hint'  => 'Add your phone number', 'external' => false],
     ];
     $mode = $mode ?? 'public';
+    // where the "+ Link ..." tiles send the owner (freelancer or employer)
+    $editUrl = auth()->check() && auth()->user()->isEmployer()
+        ? route('employer.profile.edit')
+        : route('freelancer.profile.edit');
     $any = collect($channels)->contains(fn ($c) => $c['url']);
 @endphp
 
@@ -56,7 +60,7 @@
                     <span class="go">{{ $c['external'] ? '↗' : '☎' }}</span>
                 </a>
             @elseif ($mode === 'owner')
-                <a class="ctile empty" href="{{ route('freelancer.profile.edit') }}#contact-links">
+                <a class="ctile empty" href="{{ $editUrl }}#contact-links">
                     <div>
                         <div class="cl">+ {{ $c['hint'] }}</div>
                         <div class="cv">Not linked yet</div>

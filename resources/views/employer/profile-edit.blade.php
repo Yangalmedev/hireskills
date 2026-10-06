@@ -32,6 +32,23 @@
         @error('phone')<div class="err">{{ $message }}</div>@enderror
         <p class="muted" style="margin:6px 0 0">Mobile number only, 11 digits, numbers only.</p>
 
+        <div id="contact-links" style="margin-top:22px;padding-top:6px;border-top:1px solid var(--line)">
+            <h3 style="margin:14px 0 0">Contact links</h3>
+            <p class="muted" style="margin:4px 0 0">Freelancers can click these to message, email or call you. Your phone number above is linked automatically.</p>
+
+            <label for="messenger">Facebook Messenger</label>
+            <input type="text" id="messenger" name="messenger" maxlength="200"
+                   value="{{ old('messenger', $profile->messenger) }}"
+                   placeholder="your.username or facebook.com/your.username">
+            @error('messenger')<div class="err">{{ $message }}</div>@enderror
+            <p class="muted" style="margin:6px 0 0">Tip: open your Facebook profile, copy the link from the address bar and paste it here.</p>
+
+            <label for="gmail">Gmail</label>
+            <input type="text" id="gmail" name="gmail" maxlength="100" inputmode="email"
+                   value="{{ old('gmail', $profile->gmail) }}" placeholder="yourname@gmail.com">
+            @error('gmail')<div class="err">{{ $message }}</div>@enderror
+        </div>
+
         <label for="address">Street / Purok / Sitio</label>
         <input type="text" id="address" name="address" value="{{ old('address', $profile->address) }}">
 
