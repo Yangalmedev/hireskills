@@ -48,7 +48,11 @@
         </div>
         <div class="rate">
             <b>{{ $profile->hourly_rate ? '₱'.number_format($profile->hourly_rate, 2) : '—' }}</b><span class="muted"> / hr</span><br>
-            <a class="btn solid" style="margin-top:10px" href="mailto:{{ $profile->user->email }}">Contact / Hire</a>
+            @php $primary = $profile->messenger_url ?: ($profile->gmail_url ?: $profile->phone_url); @endphp
+            @if ($primary)
+                <a class="btn solid" style="margin-top:10px" href="{{ $primary }}"
+                   @if (! str_starts_with($primary, 'tel:')) target="_blank" rel="noopener noreferrer" @endif>Contact / Hire</a>
+            @endif
         </div>
     </div>
 
@@ -60,10 +64,9 @@
             @forelse($profile->skills_list as $s)<span class="tag">{{ $s }}</span>@empty<p class="muted">No skills listed.</p>@endforelse
         </div>
         <div class="card info">
-            <h3>Contact & location</h3>
-            <p>✉️ {{ $profile->user->email }}</p>
-            <p>📞 {{ $profile->phone ?: 'Not provided' }}</p>
-            <p>📍 {{ $profile->full_location }}</p>
+            <h3>Contact</h3>
+            @include('freelancers._contact', ['profile' => $profile, 'mode' => 'public'])
+            <p style="margin-top:16px">📍 {{ $profile->full_location }}</p>
         </div>
     </div>
     @php

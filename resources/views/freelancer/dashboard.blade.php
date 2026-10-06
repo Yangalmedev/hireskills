@@ -37,6 +37,12 @@
         </div>
 
         <div class="card" style="grid-column:1/-1">
+            <h3>Contact links</h3>
+            <p class="muted" style="margin:0 0 14px">Employers tap these to reach you on Messenger, Gmail or by phone.</p>
+            @include('freelancers._contact', ['profile' => $profile, 'mode' => 'owner'])
+        </div>
+
+        <div class="card" style="grid-column:1/-1">
             <h3>Skills</h3>
             @forelse($profile->skills_list as $skill)<span class="tag">{{ $skill }}</span>@empty<p class="muted">No skills added yet.</p>@endforelse
             <h3 style="margin-top:14px">About</h3>

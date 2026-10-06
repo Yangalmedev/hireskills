@@ -23,7 +23,7 @@ class FreelancerProfile extends Model
 
     protected $fillable = [
         'user_id', 'title', 'category', 'bio', 'skills',
-        'hourly_rate', 'phone', 'address', 'barangay', 'city',
+        'hourly_rate', 'phone', 'messenger', 'gmail', 'address', 'barangay', 'city',
     ];
 
     public function user(): BelongsTo
@@ -55,5 +55,25 @@ class FreelancerProfile extends Model
     public function getFullLocationAttribute(): string
     {
         return Abuyog::location($this->address, $this->barangay);
+    }
+
+    /** Opens the person's Messenger chat: https://m.me/username */
+    public function getMessengerUrlAttribute(): ?string
+    {
+        return filled($this->messenger) ? 'https://m.me/'.rawurlencode($this->messenger) : null;
+    }
+
+    /** Opens a new Gmail message addressed to the freelancer. */
+    public function getGmailUrlAttribute(): ?string
+    {
+        return filled($this->gmail)
+            ? 'https://mail.google.com/mail/?view=cm&fs=1&to='.rawurlencode($this->gmail)
+            : null;
+    }
+
+    /** Starts a phone call (tel: link). */
+    public function getPhoneUrlAttribute(): ?string
+    {
+        return filled($this->phone) ? 'tel:'.$this->phone : null;
     }
 }
