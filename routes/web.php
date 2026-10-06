@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
 use App\Http\Controllers\Freelancer\DashboardController as FreelancerDashboard;
 use App\Http\Controllers\FreelancerController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // ---- Public pages ----
@@ -27,6 +28,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AccountController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [AccountController::class, 'dashboard'])->name('dashboard');
+    Route::post('/freelancers/{freelancer}/reviews', [ReviewController::class, 'store'])
+        ->middleware('role:employer')
+        ->name('freelancers.reviews.store');
 
     Route::middleware('role:freelancer')->prefix('freelancer')->name('freelancer.')->group(function () {
         Route::get('/dashboard', [FreelancerDashboard::class, 'index'])->name('dashboard');

@@ -18,6 +18,20 @@
     .two{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:18px}
     .tag{display:inline-block;background:var(--g2);color:#fff;border-radius:99px;padding:5px 14px;font-size:14px;margin:0 6px 8px 0}
     .info p{margin:8px 0}
+    .rev-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+    .stars{color:#f5b301;letter-spacing:2px;font-size:18px}
+    .stars .off{color:#d4dcd2}
+    .rev{border-top:1px solid var(--line);padding:16px 0}
+    .rev:first-of-type{border-top:0}
+    .rev p{margin:8px 0 6px;line-height:1.6}
+    .flash{background:#e6f9e0;border:1px solid var(--g2);color:var(--g);padding:10px 14px;border-radius:8px;margin-bottom:14px}
+    .err{color:#c0392b;font-size:13px;margin-top:6px}
+    .stars-input{display:inline-flex;flex-direction:row-reverse;gap:4px}
+    .stars-input input{display:none}
+    .stars-input label{font-size:34px;line-height:1;color:#d4dcd2;cursor:pointer}
+    .stars-input input:checked ~ label,.stars-input label:hover,.stars-input label:hover ~ label{color:#f5b301}
+    .rev-form textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;font-size:15px;font-family:inherit;margin-top:10px}
+    .rev-form textarea:focus{outline:2px solid var(--g2);border-color:transparent}
 </style>
 @endpush
 
@@ -51,6 +65,61 @@
             <p>📞 {{ $profile->phone ?: 'Not provided' }}</p>
             <p>📍 {{ $profile->full_location }}</p>
         </div>
+    </div>
+    @php
+        $reviews = \Illuminate\Support\Facades\Schema::hasTable('reviews')
+            ? $profile->reviews()->with('employer')->latest()->get()
+            : collect();
+        $avg = $reviews->count() ? round($reviews->avg('rating'), 1) : null;
+        $myReview = auth()->user()?->isEmployer() ? $reviews->firstWhere('user_id', auth()->id()) : null;
+    @endphp
+
+    <div class="card" style="margin-top:18px" id="reviews">
+        <div class="rev-head">
+            <h3 style="margin:0">Reviews</h3>
+            @if ($avg)
+                <div>
+                    <span class="stars">{{ str_repeat('★', (int) round($avg)) }}<span class="off">{{ str_repeat('★', 5 - (int) round($avg)) }}</span></span>
+                    <b>{{ number_format($avg, 1) }}</b> <span class="muted">({{ $reviews->count() }})</span>
+                </div>
+            @endif
+        </div>
+
+        @if (session('success'))<div class="flash" style="margin-top:12px">{{ session('success') }}</div>@endif
+
+        @forelse ($reviews as $r)
+            <div class="rev">
+                <span class="stars">{{ str_repeat('★', $r->rating) }}<span class="off">{{ str_repeat('★', 5 - $r->rating) }}</span></span>
+                <p>{{ $r->comment }}</p>
+                <span class="muted">{{ $r->reviewer_name }} · {{ $r->created_at->format('M d, Y') }}</span>
+            </div>
+        @empty
+            <p class="muted" style="margin-top:12px">No reviews yet.</p>
+        @endforelse
+
+        @auth
+            @if (auth()->user()->isEmployer())
+                <form class="rev-form" method="POST" action="{{ route('freelancers.reviews.store', $profile) }}"
+                      style="margin-top:20px;border-top:1px solid var(--line);padding-top:18px">
+                    @csrf
+                    <b>{{ $myReview ? 'Edit your review' : 'Write a review' }}</b>
+                    <div style="margin-top:8px">
+                        <div class="stars-input">
+                            @for ($i = 5; $i >= 1; $i--)
+                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" @checked((int) old('rating', $myReview?->rating) === $i)>
+                                <label for="star{{ $i }}" title="{{ $i }} star{{ $i === 1 ? '' : 's' }}">★</label>
+                            @endfor
+                        </div>
+                    </div>
+                    @error('rating')<div class="err">{{ $message }}</div>@enderror
+                    <textarea name="comment" rows="4" maxlength="1000" placeholder="How was your experience working with {{ $profile->user->name }}?">{{ old('comment', $myReview?->comment) }}</textarea>
+                    @error('comment')<div class="err">{{ $message }}</div>@enderror
+                    <button class="btn solid" style="margin-top:12px" type="submit">{{ $myReview ? 'Update review' : 'Post review' }}</button>
+                </form>
+            @else
+                <p class="muted" style="margin-top:16px">Only employers can write reviews.</p>
+            @endif
+        @endauth
     </div>
 </div>
 @endsection

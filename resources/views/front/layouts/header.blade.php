@@ -17,7 +17,6 @@
     <nav class="site-nav">
         <a class="{{ request()->routeIs('home') ? 'on' : '' }}" href="{{ route('home') }}">Home</a>
         <a class="{{ request()->routeIs('about') ? 'on' : '' }}" href="{{ route('about') }}">About Us</a>
-        <a href="{{ route('freelancers.index') }}#categories">Category</a>
         <a class="{{ request()->routeIs('freelancers.*') ? 'on' : '' }}" href="{{ route('freelancers.index') }}">Freelancers</a>
     </nav>
 
