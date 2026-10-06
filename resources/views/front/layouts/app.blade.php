@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'HireSkills Abuyog')</title>
+    @include('partials.favicon')
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root{--g:#0b7a0b;--g2:#16a116;--bg:#f4fff0;--line:#cfe8c9}
