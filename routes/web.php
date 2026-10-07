@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
 use App\Http\Controllers\Freelancer\DashboardController as FreelancerDashboard;
+use App\Http\Controllers\Freelancer\CertificationController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
@@ -31,11 +32,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/freelancers/{freelancer}/reviews', [ReviewController::class, 'store'])
         ->middleware('role:employer')
         ->name('freelancers.reviews.store');
+    Route::get('/certifications/{certification}/file', [CertificationController::class, 'file'])
+        ->name('certifications.file');
+
 
     Route::middleware('role:freelancer')->prefix('freelancer')->name('freelancer.')->group(function () {
         Route::get('/dashboard', [FreelancerDashboard::class, 'index'])->name('dashboard');
         Route::get('/profile', [FreelancerDashboard::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [FreelancerDashboard::class, 'update'])->name('profile.update');
+        Route::get('/certifications', [CertificationController::class, 'index'])->name('certifications.index');
+        Route::post('/certifications', [CertificationController::class, 'store'])->name('certifications.store');
+        Route::get('/certifications/{certification}/edit', [CertificationController::class, 'edit'])->name('certifications.edit');
+        Route::put('/certifications/{certification}', [CertificationController::class, 'update'])->name('certifications.update');
+        Route::delete('/certifications/{certification}', [CertificationController::class, 'destroy'])->name('certifications.destroy');
     });
 
     Route::middleware('role:employer')->prefix('employer')->name('employer.')->group(function () {

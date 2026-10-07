@@ -69,6 +69,11 @@
             <p style="margin-top:16px">📍 {{ $profile->full_location }}</p>
         </div>
     </div>
+    <div class="card" style="margin-top:18px" id="certifications">
+        <h3>Certifications</h3>
+        @include('freelancers._certifications', ['certifications' => $profile->certifications()->orderByDesc('issued_on')->get()])
+    </div>
+
     @php
         $reviews = \Illuminate\Support\Facades\Schema::hasTable('reviews')
             ? $profile->reviews()->with('employer')->latest()->get()

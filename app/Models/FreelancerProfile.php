@@ -39,6 +39,11 @@ class FreelancerProfile extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function certifications(): HasMany
+    {
+        return $this->hasMany(Certification::class);
+    }
+
     public function getSkillsListAttribute(): array
     {
         return array_values(array_filter(array_map('trim', explode(',', (string) $this->skills))));
