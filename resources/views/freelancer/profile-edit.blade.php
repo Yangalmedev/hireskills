@@ -4,6 +4,7 @@
     <a href="{{ route('freelancer.dashboard') }}">Dashboard</a>
     <a class="active" href="{{ route('freelancer.profile.edit') }}">Edit Profile</a>
     <a href="{{ route('freelancer.certifications.index') }}">Certifications</a>
+    <a href="{{ route('freelancer.portfolio.index') }}">Portfolio</a>
     <a href="{{ route('freelancers.index') }}">Browse Freelancers</a>
     <a href="{{ route('home') }}">Home</a>
 @endsection

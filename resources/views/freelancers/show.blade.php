@@ -69,6 +69,11 @@
             <p style="margin-top:16px">📍 {{ $profile->full_location }}</p>
         </div>
     </div>
+    <div class="card" style="margin-top:18px" id="portfolio">
+        <h3>Portfolio</h3>
+        @include('freelancers._portfolio', ['items' => $profile->portfolioItems()->latest()->get()])
+    </div>
+
     <div class="card" style="margin-top:18px" id="certifications">
         <h3>Certifications</h3>
         @include('freelancers._certifications', ['certifications' => $profile->certifications()->orderByDesc('issued_on')->get()])

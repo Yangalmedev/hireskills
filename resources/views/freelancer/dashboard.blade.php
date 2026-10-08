@@ -4,6 +4,7 @@
     <a class="active" href="{{ route('freelancer.dashboard') }}">Dashboard</a>
     <a href="{{ route('freelancer.profile.edit') }}">Edit Profile</a>
     <a href="{{ route('freelancer.certifications.index') }}">Certifications</a>
+    <a href="{{ route('freelancer.portfolio.index') }}">Portfolio</a>
     <a href="{{ route('freelancers.index') }}">Browse Freelancers</a>
     <a href="{{ route('home') }}">Home</a>
 @endsection
@@ -41,6 +42,14 @@
             <h3>Contact links</h3>
             <p class="muted" style="margin:0 0 14px">Employers tap these to reach you on Messenger, Gmail or by phone.</p>
             @include('freelancers._contact', ['profile' => $profile, 'mode' => 'owner'])
+        </div>
+
+        <div class="card" style="grid-column:1/-1">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+                <h3 style="margin:0">Portfolio</h3>
+                <a class="btn ghost" href="{{ route('freelancer.portfolio.index') }}">Manage portfolio</a>
+            </div>
+            @include('freelancers._portfolio', ['items' => $profile->portfolioItems()->latest()->get()])
         </div>
 
         <div class="card" style="grid-column:1/-1">

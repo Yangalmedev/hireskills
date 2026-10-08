@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
 use App\Http\Controllers\Freelancer\DashboardController as FreelancerDashboard;
+use App\Http\Controllers\Freelancer\PortfolioController;
 use App\Http\Controllers\Freelancer\CertificationController;
 use App\Http\Controllers\FreelancerController;
 use App\Http\Controllers\ReviewController;
@@ -34,7 +35,8 @@ Route::middleware('auth')->group(function () {
         ->name('freelancers.reviews.store');
     Route::get('/certifications/{certification}/file', [CertificationController::class, 'file'])
         ->name('certifications.file');
-
+    Route::get('/portfolio/{portfolioItem}/file', [PortfolioController::class, 'file'])
+        ->name('portfolio.file');
 
     Route::middleware('role:freelancer')->prefix('freelancer')->name('freelancer.')->group(function () {
         Route::get('/dashboard', [FreelancerDashboard::class, 'index'])->name('dashboard');
@@ -45,6 +47,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/certifications/{certification}/edit', [CertificationController::class, 'edit'])->name('certifications.edit');
         Route::put('/certifications/{certification}', [CertificationController::class, 'update'])->name('certifications.update');
         Route::delete('/certifications/{certification}', [CertificationController::class, 'destroy'])->name('certifications.destroy');
+        Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+        Route::post('/portfolio', [PortfolioController::class, 'store'])->name('portfolio.store');
+        Route::get('/portfolio/{portfolioItem}/edit', [PortfolioController::class, 'edit'])->name('portfolio.edit');
+        Route::put('/portfolio/{portfolioItem}', [PortfolioController::class, 'update'])->name('portfolio.update');
+        Route::delete('/portfolio/{portfolioItem}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
     });
 
     Route::middleware('role:employer')->prefix('employer')->name('employer.')->group(function () {
