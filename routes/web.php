@@ -3,6 +3,8 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboard;
+use App\Http\Controllers\Employer\HireRequestController as EmployerHireRequestController;
+use App\Http\Controllers\Freelancer\HireRequestController as FreelancerHireRequestController;
 use App\Http\Controllers\Freelancer\DashboardController as FreelancerDashboard;
 use App\Http\Controllers\Freelancer\PortfolioController;
 use App\Http\Controllers\Freelancer\CertificationController;
@@ -52,12 +54,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/portfolio/{portfolioItem}/edit', [PortfolioController::class, 'edit'])->name('portfolio.edit');
         Route::put('/portfolio/{portfolioItem}', [PortfolioController::class, 'update'])->name('portfolio.update');
         Route::delete('/portfolio/{portfolioItem}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+        Route::get('/requests', [FreelancerHireRequestController::class, 'index'])->name('requests.index');
+        Route::post('/requests/{hireRequest}/accept', [FreelancerHireRequestController::class, 'accept'])->name('requests.accept');
+        Route::post('/requests/{hireRequest}/decline', [FreelancerHireRequestController::class, 'decline'])->name('requests.decline');
     });
 
     Route::middleware('role:employer')->prefix('employer')->name('employer.')->group(function () {
         Route::get('/dashboard', [EmployerDashboard::class, 'index'])->name('dashboard');
         Route::get('/profile', [EmployerDashboard::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [EmployerDashboard::class, 'update'])->name('profile.update');
+        Route::get('/requests', [EmployerHireRequestController::class, 'index'])->name('requests.index');
+        Route::post('/requests/{hireRequest}/cancel', [EmployerHireRequestController::class, 'cancel'])->name('requests.cancel');
+        Route::post('/requests/{hireRequest}/complete', [EmployerHireRequestController::class, 'complete'])->name('requests.complete');
+        Route::get('/hire/{freelancer}', [EmployerHireRequestController::class, 'create'])->name('hire.create');
+        Route::post('/hire/{freelancer}', [EmployerHireRequestController::class, 'store'])->middleware('throttle:10,60')->name('hire.store');
     });
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {

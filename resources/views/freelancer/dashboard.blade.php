@@ -2,6 +2,7 @@
 @section('title', 'Freelancer Dashboard')
 @section('nav')
     <a class="active" href="{{ route('freelancer.dashboard') }}">Dashboard</a>
+    @include('dashboard._requests-link')
     <a href="{{ route('freelancer.profile.edit') }}">Edit Profile</a>
     <a href="{{ route('freelancer.certifications.index') }}">Certifications</a>
     <a href="{{ route('freelancer.portfolio.index') }}">Portfolio</a>
@@ -42,6 +43,22 @@
             <h3>Contact links</h3>
             <p class="muted" style="margin:0 0 14px">Employers tap these to reach you on Messenger, Gmail or by phone.</p>
             @include('freelancers._contact', ['profile' => $profile, 'mode' => 'owner'])
+        </div>
+
+        @php
+            $pendingReqs = \App\Models\HireRequest::with('employer')->where('freelancer_profile_id', $profile->id)->where('status', 'pending')->latest()->take(3)->get();
+            $pendingTotal = \App\Models\HireRequest::where('freelancer_profile_id', $profile->id)->where('status', 'pending')->count();
+        @endphp
+        <div class="card" style="grid-column:1/-1">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+                <h3 style="margin:0">Hire requests @if($pendingTotal)<span style="background:#c0392b;color:#fff;border-radius:10px;padding:1px 8px;font-size:13px">{{ $pendingTotal }} new</span>@endif</h3>
+                <a class="btn ghost" href="{{ route('freelancer.requests.index') }}">View all</a>
+            </div>
+            @forelse ($pendingReqs as $r)
+                <p style="margin:6px 0"><b>{{ $r->title }}</b> <span class="muted">— {{ $r->employer->name }}, {{ $r->created_at->diffForHumans() }}</span></p>
+            @empty
+                <p class="muted" style="margin:0">No pending requests right now.</p>
+            @endforelse
         </div>
 
         <div class="card" style="grid-column:1/-1">

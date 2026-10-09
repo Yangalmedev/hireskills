@@ -48,10 +48,15 @@
         </div>
         <div class="rate">
             <b>{{ $profile->hourly_rate ? '₱'.number_format($profile->hourly_rate, 2) : '—' }}</b><span class="muted"> / hr</span><br>
+            @auth
+                @if (auth()->user()->isEmployer())
+                    <a class="btn solid" style="margin-top:10px" href="{{ route('employer.hire.create', $profile) }}">Request to hire</a>
+                @endif
+            @endauth
             @php $primary = $profile->messenger_url ?: ($profile->gmail_url ?: $profile->phone_url); @endphp
             @if ($primary)
-                <a class="btn solid" style="margin-top:10px" href="{{ $primary }}"
-                   @if (! str_starts_with($primary, 'tel:')) target="_blank" rel="noopener noreferrer" @endif>Contact / Hire</a>
+                <a class="btn" style="margin-top:10px" href="{{ $primary }}"
+                   @if (! str_starts_with($primary, 'tel:')) target="_blank" rel="noopener noreferrer" @endif>Contact</a>
             @endif
         </div>
     </div>
@@ -85,6 +90,9 @@
             : collect();
         $avg = $reviews->count() ? round($reviews->avg('rating'), 1) : null;
         $myReview = auth()->user()?->isEmployer() ? $reviews->firstWhere('user_id', auth()->id()) : null;
+        $canReview = auth()->user()?->isEmployer()
+            && \App\Models\HireRequest::where('employer_id', auth()->id())
+                ->where('freelancer_profile_id', $profile->id)->where('status', 'completed')->exists();
     @endphp
 
     <div class="card" style="margin-top:18px" id="reviews">
@@ -111,7 +119,7 @@
         @endforelse
 
         @auth
-            @if (auth()->user()->isEmployer())
+            @if (auth()->user()->isEmployer() && $canReview)
                 <form class="rev-form" method="POST" action="{{ route('freelancers.reviews.store', $profile) }}"
                       style="margin-top:20px;border-top:1px solid var(--line);padding-top:18px">
                     @csrf
@@ -129,6 +137,8 @@
                     @error('comment')<div class="err">{{ $message }}</div>@enderror
                     <button class="btn solid" style="margin-top:12px" type="submit">{{ $myReview ? 'Update review' : 'Post review' }}</button>
                 </form>
+            @elseif (auth()->user()->isEmployer())
+                <p class="muted" style="margin-top:16px">You can review this freelancer after a hire request with them is marked completed.</p>
             @else
                 <p class="muted" style="margin-top:16px">Only employers can write reviews.</p>
             @endif

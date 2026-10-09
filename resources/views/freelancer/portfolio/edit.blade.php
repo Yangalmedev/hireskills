@@ -2,6 +2,7 @@
 @section('title', 'Edit Sample')
 @section('nav')
     <a href="{{ route('freelancer.dashboard') }}">Dashboard</a>
+    @include('dashboard._requests-link')
     <a href="{{ route('freelancer.profile.edit') }}">Edit Profile</a>
     <a href="{{ route('freelancer.certifications.index') }}">Certifications</a>
     <a class="active" href="{{ route('freelancer.portfolio.index') }}">Portfolio</a>

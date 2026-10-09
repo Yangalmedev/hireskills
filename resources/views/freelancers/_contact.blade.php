@@ -70,5 +70,5 @@
         @endforeach
     </div>
 @else
-    <p class="muted" style="margin:0">This freelancer hasn’t added contact links yet.</p>
+    <p class="muted" style="margin:0">{{ $emptyText ?? 'This freelancer hasn’t added contact links yet.' }}</p>
 @endif
